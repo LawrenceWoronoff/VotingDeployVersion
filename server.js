@@ -1,3 +1,4 @@
+const path = require("path");
 require('dotenv').config();
 const express =require('express');
 const cors=require("cors");
@@ -30,6 +31,11 @@ var userRouter=require('./app/routes/user.route.js');
 const PORT=process.env.PORT||8080;
 
 app.use('/auth',userRouter);
+
+// app.get('*', (req, res) => {
+//     res.sendFile('index.html', {root: path.join(__dirname, './public/')});
+// });
+app.use(express.static('public', {}))
 
 app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
