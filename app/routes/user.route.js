@@ -240,7 +240,7 @@ router.post('/user/verify-email',async(req,res)=>{
             
             mailTransporter.sendMail(mailDetails, function(err, data){
                 if(err){
-                    res.status(400).send('Some errors occurred while sending email...');
+                    res.status(400).send('Mail Transporter Error');
                 } else { 
                     res.status(200).send({email:email, verificationCode:verificationCode});
                 }
@@ -248,7 +248,7 @@ router.post('/user/verify-email',async(req,res)=>{
             console.log(verificationCode,'pass');
         }
     }catch(error){
-        res.status(400).send('Some errors occurred while sending email...');
+        res.status(400).send('Try Catch Error of verify-email');
     }
 });
 router.post('/user/send-email',async(req,res)=>{
@@ -261,13 +261,15 @@ router.post('/user/send-email',async(req,res)=>{
                         console.log(user.name);
                         const verificationCode = Math.floor(100000+Math.random()*900000).toString();
 
-                        let mailTransporter = nodemailer.createTransport({
+                        var smtpTransport = require('nodemailer-smtp-transport');
+
+                        let mailTransporter = nodemailer.createTransport(smtpTransport({
                             service:'gmail',
                             auth:{
                                 user:process.env.EMAIL_SENDER,
                                 pass:process.env.EMAIL_PASS
                             }
-                        });
+                        }));
                         let mailDetails = {
                             from:process.env.EMAIL_SENDER,
                             to:email,
@@ -281,7 +283,7 @@ router.post('/user/send-email',async(req,res)=>{
                         
                         mailTransporter.sendMail(mailDetails, function(err, data){
                             if(err){
-                                res.status(400).send('Some errors occurred while sending email...');
+                                res.status(400).send(err);
                             } else {
                                 res.status(200).send({email:email, verificationCode:verificationCode});
                          }

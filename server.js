@@ -4,6 +4,7 @@ const express =require('express');
 const cors=require("cors");
 const bodyParser =require('body-parser');
 const app=express();
+
 var corsOptions={
     option:"http//localhost:8081"
 }
@@ -32,10 +33,17 @@ const PORT=process.env.PORT||8080;
 
 app.use('/auth',userRouter);
 
+
+app.use(express.static(path.join(__dirname, 'public')));
+
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
 // app.get('*', (req, res) => {
 //     res.sendFile('index.html', {root: path.join(__dirname, './public/')});
 // });
-app.use(express.static('public', {}))
+// app.use(express.static('public', {}))
 
 app.listen(PORT,()=>{
     console.log(`Server is running on port ${PORT}`);
